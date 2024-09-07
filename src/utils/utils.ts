@@ -21,7 +21,6 @@ export const weightedIntervalScheduling = (tasks: Task[]): Task[] => {
 
   const n = tasks.length;
   const dp = new Array(n).fill(0);
-  const selectedTasks: number[] = new Array(n).fill(-1);
 
   dp[0] = tasks[0].weight;
 
