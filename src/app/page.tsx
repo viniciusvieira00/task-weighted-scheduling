@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar, Alert } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -13,11 +13,15 @@ const Home = () => {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
   const [manualWeight, setManualWeight] = useState<number | null>(null);
-  const [isManualWeightMode, setIsManualWeightMode] = useState<boolean>(false);
+  const [isManualWeightMode, setIsManualWeightMode] = useState<boolean>(false); 
   const [result, setResult] = useState<Task[]>([]);
   const [totalWeight, setTotalWeight] = useState<number>(0);
-  const [isEditing, setIsEditing] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState<number | null>(null); 
   const [error, setError] = useState<string | null>(null);
+
+  
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
   const handleAddTask = () => {
     if (startTime && endTime) {
@@ -26,10 +30,10 @@ const Home = () => {
         return;
       }
 
-
+      
       const weight = isManualWeightMode && manualWeight !== null
-        ? manualWeight
-        : (isEditing !== null ? tasks[isEditing].weight : tasks.length + 1);
+        ? manualWeight 
+        : (isEditing !== null ? tasks[isEditing].weight : tasks.length + 1); 
 
       const newTask: Task = {
         start: startTime,
@@ -38,33 +42,39 @@ const Home = () => {
       };
 
       if (isEditing !== null) {
-
+        
         const updatedTasks = [...tasks];
         updatedTasks[isEditing] = newTask;
         setTasks(updatedTasks);
-        setIsEditing(null);
+        setIsEditing(null); 
+        setSnackbarMessage("Tarefa editada com sucesso!");
       } else {
-
+        
         setTasks([...tasks, newTask]);
+        setSnackbarMessage("Tarefa adicionada com sucesso!");
       }
+
+      setSnackbarOpen(true); 
 
       setStartTime(null);
       setEndTime(null);
-      setManualWeight(null);
+      setManualWeight(null); 
     }
   };
 
   const handleDeleteTask = (index: number) => {
     const updatedTasks = tasks.filter((_, i) => i !== index);
     setTasks(updatedTasks);
+    setSnackbarMessage("Tarefa removida com sucesso!");
+    setSnackbarOpen(true); 
   };
 
   const handleEditTask = (index: number) => {
     const taskToEdit = tasks[index];
     setStartTime(taskToEdit.start);
     setEndTime(taskToEdit.end);
-    setManualWeight(isManualWeightMode ? taskToEdit.weight : null);
-    setIsEditing(index);
+    setManualWeight(isManualWeightMode ? taskToEdit.weight : null); 
+    setIsEditing(index); 
   };
 
   const handleSchedule = () => {
@@ -72,16 +82,25 @@ const Home = () => {
     setResult(scheduledTasks);
     const total = scheduledTasks.reduce((sum, task) => sum + task.weight, 0);
     setTotalWeight(total);
+    setSnackbarMessage("Agendamento concluído com sucesso!");
+    setSnackbarOpen(true); 
   };
 
   const handleResetTasks = () => {
     setTasks([]);
     setResult([]);
     setTotalWeight(0);
+    setSnackbarMessage("Todas as tarefas foram resetadas.");
+    setSnackbarOpen(true); 
   };
 
   const handleCloseError = () => {
     setError(null);
+  };
+
+  
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -91,7 +110,7 @@ const Home = () => {
           Agendamento de Reuniões
         </Typography>
 
-
+        
         <Button
           variant="outlined"
           onClick={() => setIsManualWeightMode(!isManualWeightMode)}
@@ -100,7 +119,7 @@ const Home = () => {
           {isManualWeightMode ? "Usar Pesos Automáticos" : "Inserir Pesos Manualmente"}
         </Button>
 
-
+       
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
           <TimePicker
             label="Horário de Início"
@@ -115,7 +134,7 @@ const Home = () => {
             onChange={(newValue) => setEndTime(newValue)}
           />
 
-
+          
           {isManualWeightMode && (
             <TextField
               label="Peso"
@@ -134,7 +153,7 @@ const Home = () => {
           Concluir Agendamento
         </Button>
 
-
+        
         <TaskList
           tasks={tasks}
           result={result}
@@ -145,7 +164,7 @@ const Home = () => {
           isManualWeightMode={isManualWeightMode}
         />
 
-
+        
         <Dialog open={!!error} onClose={handleCloseError}>
           <DialogTitle>Erro</DialogTitle>
           <DialogContent>{error}</DialogContent>
@@ -153,6 +172,18 @@ const Home = () => {
             <Button onClick={handleCloseError}>Fechar</Button>
           </DialogActions>
         </Dialog>
+
+        
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Box>
     </LocalizationProvider>
   );
