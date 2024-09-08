@@ -1,10 +1,15 @@
 # Agendamento de Reuniões com Weighted Interval Scheduling
 
-Este projeto é uma aplicação interativa que permite aos usuários adicionar intervalos de horários de reuniões, verificar a compatibilidade entre os horários e agendar reuniões de forma otimizada usando o algoritmo de *Weighted Interval Scheduling*. Desenvolvida utilizando **Next.js**, **TypeScript** e **Material-UI**, a aplicação possibilita adicionar múltiplas tarefas, verificar conflitos de horário, e visualizar a linha do tempo das reuniões agendadas com base no peso atribuído a cada tarefa.
+Este projeto é uma aplicação interativa que permite aos usuários adicionar intervalos de horários de reuniões, verificar a compatibilidade entre os horários e agendar reuniões de forma otimizada usando o algoritmo de *Weighted Interval Scheduling*. Desenvolvida utilizando **Next.js**, **TypeScript** e **Material-UI**, a aplicação possibilita adicionar múltiplas tarefas, editar e remover tarefas, verificar conflitos de horário, e visualizar a linha do tempo das reuniões agendadas com base no peso atribuído a cada tarefa.
 
 ## Funcionalidades
 
 - Adicionar intervalos de horários para tarefas (reuniões) com campos de início e fim.
+- Definir pesos das tarefas de forma **automática** ou **manual**:
+  - **Modo automático**: O sistema atribui pesos automaticamente e sequencialmente às tarefas.
+  - **Modo manual**: O usuário pode definir manualmente os pesos de cada tarefa.
+- Edição de tarefas existentes com a possibilidade de alterar horários e pesos.
+- Remoção de tarefas da lista de agendamentos.
 - Verificação de compatibilidade entre horários (impede fim anterior ao início).
 - Agendamento otimizado utilizando o algoritmo *Weighted Interval Scheduling*.
 - Exibição visual dos intervalos de reuniões agendadas utilizando uma linha do tempo (*Timeline*).
@@ -13,7 +18,7 @@ Este projeto é uma aplicação interativa que permite aos usuários adicionar i
 
 ## Algoritmo de Weighted Interval Scheduling
 
-O algoritmo de *Weighted Interval Scheduling* é usado para selecionar as tarefas que maximizam o valor total (peso) de um conjunto de tarefas sem sobreposição de horários. Cada tarefa é atribuída um peso sequencial de acordo com sua ordem de inserção.
+O algoritmo de *Weighted Interval Scheduling* é usado para selecionar as tarefas que maximizam o valor total (peso) de um conjunto de tarefas sem sobreposição de horários. Cada tarefa pode ser atribuída um peso automaticamente ou manualmente.
 
 ### Funcionamento do Algoritmo
 
