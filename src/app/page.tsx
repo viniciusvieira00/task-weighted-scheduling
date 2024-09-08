@@ -12,10 +12,11 @@ const Home = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
+  const [manualWeight, setManualWeight] = useState<number | null>(null);
+  const [isManualWeightMode, setIsManualWeightMode] = useState<boolean>(false);
   const [result, setResult] = useState<Task[]>([]);
   const [totalWeight, setTotalWeight] = useState<number>(0);
-  const [manualWeight, setManualWeight] = useState<number | null>(null);
-  const [isManualWeightMode, setIsManualWeightMode] = useState<boolean>(false); // Modo manual
+  const [isEditing, setIsEditing] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleAddTask = () => {
@@ -25,18 +26,45 @@ const Home = () => {
         return;
       }
 
-      const weight = isManualWeightMode && manualWeight ? manualWeight : tasks.length + 1;
+
+      const weight = isManualWeightMode && manualWeight !== null
+        ? manualWeight
+        : (isEditing !== null ? tasks[isEditing].weight : tasks.length + 1);
 
       const newTask: Task = {
         start: startTime,
         end: endTime,
         weight,
       };
-      setTasks([...tasks, newTask]);
+
+      if (isEditing !== null) {
+
+        const updatedTasks = [...tasks];
+        updatedTasks[isEditing] = newTask;
+        setTasks(updatedTasks);
+        setIsEditing(null);
+      } else {
+
+        setTasks([...tasks, newTask]);
+      }
+
       setStartTime(null);
       setEndTime(null);
-      setManualWeight(null); 
+      setManualWeight(null);
     }
+  };
+
+  const handleDeleteTask = (index: number) => {
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks);
+  };
+
+  const handleEditTask = (index: number) => {
+    const taskToEdit = tasks[index];
+    setStartTime(taskToEdit.start);
+    setEndTime(taskToEdit.end);
+    setManualWeight(isManualWeightMode ? taskToEdit.weight : null);
+    setIsEditing(index);
   };
 
   const handleSchedule = () => {
@@ -63,6 +91,7 @@ const Home = () => {
           Agendamento de Reuniões
         </Typography>
 
+
         <Button
           variant="outlined"
           onClick={() => setIsManualWeightMode(!isManualWeightMode)}
@@ -70,6 +99,7 @@ const Home = () => {
         >
           {isManualWeightMode ? "Usar Pesos Automáticos" : "Inserir Pesos Manualmente"}
         </Button>
+
 
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
           <TimePicker
@@ -84,7 +114,8 @@ const Home = () => {
             ampm={false}
             onChange={(newValue) => setEndTime(newValue)}
           />
-          
+
+
           {isManualWeightMode && (
             <TextField
               label="Peso"
@@ -95,7 +126,7 @@ const Home = () => {
           )}
 
           <Button variant="contained" onClick={handleAddTask} disabled={!startTime || !endTime || (isManualWeightMode && !manualWeight)}>
-            Adicionar
+            {isEditing !== null ? "Salvar Alterações" : "Adicionar"}
           </Button>
         </Box>
 
@@ -103,7 +134,17 @@ const Home = () => {
           Concluir Agendamento
         </Button>
 
-        <TaskList tasks={tasks} result={result} totalWeight={totalWeight} onReset={handleResetTasks} />
+
+        <TaskList
+          tasks={tasks}
+          result={result}
+          totalWeight={totalWeight}
+          onReset={handleResetTasks}
+          onDelete={handleDeleteTask}
+          onEdit={handleEditTask}
+          isManualWeightMode={isManualWeightMode}
+        />
+
 
         <Dialog open={!!error} onClose={handleCloseError}>
           <DialogTitle>Erro</DialogTitle>
