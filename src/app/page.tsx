@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -14,6 +14,8 @@ const Home = () => {
   const [endTime, setEndTime] = useState<Date | null>(null);
   const [result, setResult] = useState<Task[]>([]);
   const [totalWeight, setTotalWeight] = useState<number>(0);
+  const [manualWeight, setManualWeight] = useState<number | null>(null);
+  const [isManualWeightMode, setIsManualWeightMode] = useState<boolean>(false); // Modo manual
   const [error, setError] = useState<string | null>(null);
 
   const handleAddTask = () => {
@@ -23,14 +25,17 @@ const Home = () => {
         return;
       }
 
+      const weight = isManualWeightMode && manualWeight ? manualWeight : tasks.length + 1;
+
       const newTask: Task = {
         start: startTime,
         end: endTime,
-        weight: tasks.length + 1,
+        weight,
       };
       setTasks([...tasks, newTask]);
       setStartTime(null);
       setEndTime(null);
+      setManualWeight(null); 
     }
   };
 
@@ -58,6 +63,14 @@ const Home = () => {
           Agendamento de Reuniões
         </Typography>
 
+        <Button
+          variant="outlined"
+          onClick={() => setIsManualWeightMode(!isManualWeightMode)}
+          sx={{ mb: 2 }}
+        >
+          {isManualWeightMode ? "Usar Pesos Automáticos" : "Inserir Pesos Manualmente"}
+        </Button>
+
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
           <TimePicker
             label="Horário de Início"
@@ -71,7 +84,17 @@ const Home = () => {
             ampm={false}
             onChange={(newValue) => setEndTime(newValue)}
           />
-          <Button variant="contained" onClick={handleAddTask} disabled={!startTime || !endTime}>
+          
+          {isManualWeightMode && (
+            <TextField
+              label="Peso"
+              type="number"
+              value={manualWeight ?? ""}
+              onChange={(e) => setManualWeight(Number(e.target.value))}
+            />
+          )}
+
+          <Button variant="contained" onClick={handleAddTask} disabled={!startTime || !endTime || (isManualWeightMode && !manualWeight)}>
             Adicionar
           </Button>
         </Box>
