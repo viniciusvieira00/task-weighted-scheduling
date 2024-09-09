@@ -1,8 +1,9 @@
-/* globals.css */
 body {
-  background-color: #f0f0f0; /* Light grey background */
-  color: #333333; /* Darker text color */
-  font-family: var(--font-geist-sans), sans-serif;
+  background-image: url("/pexels-photo-3183150-664714538.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #333333;
   margin: 0;
   padding: 0;
   display: flex;
@@ -11,12 +12,12 @@ body {
   min-height: 100vh;
 }
 
-h1, h2, h3, p {
-  margin: 20px 0;
-}
-
-/* Add some padding for the content */
+/* Re-add the missing border and padding */
 .container {
-  max-width: 1200px;
+  background-color: #f7f7f7; /* Light background to make content readable */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for the container */
   padding: 20px;
+  max-width: 1200px;
+  margin: 20px auto;
 }
