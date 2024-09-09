@@ -19,7 +19,6 @@ const Home = () => {
   const [isEditing, setIsEditing] = useState<number | null>(null); 
   const [error, setError] = useState<string | null>(null);
 
-  
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
@@ -30,7 +29,6 @@ const Home = () => {
         return;
       }
 
-      
       const weight = isManualWeightMode && manualWeight !== null
         ? manualWeight 
         : (isEditing !== null ? tasks[isEditing].weight : tasks.length + 1); 
@@ -42,14 +40,12 @@ const Home = () => {
       };
 
       if (isEditing !== null) {
-        
         const updatedTasks = [...tasks];
         updatedTasks[isEditing] = newTask;
         setTasks(updatedTasks);
         setIsEditing(null); 
         setSnackbarMessage("Tarefa editada com sucesso!");
       } else {
-        
         setTasks([...tasks, newTask]);
         setSnackbarMessage("Tarefa adicionada com sucesso!");
       }
@@ -98,19 +94,26 @@ const Home = () => {
     setError(null);
   };
 
-  
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Box sx={{ padding: 4 }}>
-        <Typography variant="h4" gutterBottom>
+      <Box
+        sx={{
+          padding: 4,
+          backgroundColor: '#f7f7f7',
+          borderRadius: 2,
+          boxShadow: '0px 2px 10px rgba(0,0,0,0.1)',
+          maxWidth: 800,
+          margin: 'auto',
+        }}
+      >
+        <Typography variant="h4" gutterBottom align="center" sx={{ color: '#333' }}>
           Agendamento de Reuniões
         </Typography>
 
-        
         <Button
           variant="outlined"
           onClick={() => setIsManualWeightMode(!isManualWeightMode)}
@@ -119,7 +122,6 @@ const Home = () => {
           {isManualWeightMode ? "Usar Pesos Automáticos" : "Inserir Pesos Manualmente"}
         </Button>
 
-       
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
           <TimePicker
             label="Horário de Início"
@@ -133,7 +135,6 @@ const Home = () => {
             ampm={false}
             onChange={(newValue) => setEndTime(newValue)}
           />
-
           
           {isManualWeightMode && (
             <TextField
@@ -144,16 +145,26 @@ const Home = () => {
             />
           )}
 
-          <Button variant="contained" onClick={handleAddTask} disabled={!startTime || !endTime || (isManualWeightMode && !manualWeight)}>
+          <Button
+            variant="contained"
+            onClick={handleAddTask}
+            disabled={!startTime || !endTime || (isManualWeightMode && !manualWeight)}
+            sx={{ alignSelf: 'center' }}
+          >
             {isEditing !== null ? "Salvar Alterações" : "Adicionar"}
           </Button>
         </Box>
 
-        <Button variant="contained" color="primary" onClick={handleSchedule} disabled={tasks.length === 0}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSchedule}
+          disabled={tasks.length === 0}
+          sx={{ marginBottom: 2 }}
+        >
           Concluir Agendamento
         </Button>
 
-        
         <TaskList
           tasks={tasks}
           result={result}
@@ -164,7 +175,6 @@ const Home = () => {
           isManualWeightMode={isManualWeightMode}
         />
 
-        
         <Dialog open={!!error} onClose={handleCloseError}>
           <DialogTitle>Erro</DialogTitle>
           <DialogContent>{error}</DialogContent>
@@ -173,7 +183,6 @@ const Home = () => {
           </DialogActions>
         </Dialog>
 
-        
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={3000}

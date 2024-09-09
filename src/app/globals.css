@@ -1,0 +1,22 @@
+/* globals.css */
+body {
+  background-color: #f0f0f0; /* Light grey background */
+  color: #333333; /* Darker text color */
+  font-family: var(--font-geist-sans), sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+h1, h2, h3, p {
+  margin: 20px 0;
+}
+
+/* Add some padding for the content */
+.container {
+  max-width: 1200px;
+  padding: 20px;
+}
