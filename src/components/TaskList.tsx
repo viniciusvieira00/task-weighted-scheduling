@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@mui/lab';
-import { Box, Typography, Button, IconButton } from '@mui/material';
+import { Box, Typography, Button, IconButton, Alert } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Task } from '../utils/utils';
@@ -9,27 +8,25 @@ import { Task } from '../utils/utils';
 interface TaskListProps {
   tasks: Task[];
   result: Task[];
+  discardedTasks: Task[]; // Add discardedTasks prop
   totalWeight: number;
   onReset: () => void;
   onDelete: (index: number) => void;
-  onEdit: (index: number) => void; 
-  isManualWeightMode: boolean; 
+  onEdit: (index: number) => void;
+  isManualWeightMode: boolean;
 }
-
 
 const formatTime = (date: Date) => date.toLocaleTimeString('pt-BR', { hour12: false });
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, result, totalWeight, onReset, onDelete, onEdit, isManualWeightMode }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, result, discardedTasks, totalWeight, onReset, onDelete, onEdit, isManualWeightMode }) => {
   return (
     <Box>
-      
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6">Tarefas Adicionadas</Typography>
         {tasks.map((task, index) => (
           <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
             <Typography>
-              
-              {`${index + 1}° Tarefa: Início - ${formatTime(task.start)} | Fim - ${formatTime(task.end)} | Peso - ${task.weight}`}
+              {`Tarefa ${index + 1}: Início - ${formatTime(task.start)} | Fim - ${formatTime(task.end)} | Peso - ${task.weight}`}
             </Typography>
             <Box>
               <IconButton onClick={() => onEdit(index)} aria-label="edit">
@@ -55,7 +52,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, result, totalWeight, onReset
                     {index < result.length - 1 && <TimelineConnector />}
                   </TimelineSeparator>
                   <TimelineContent>
-                    {`Tarefa ${index + 1}: Início - ${formatTime(task.start)} | Fim - ${formatTime(task.end)} | Peso - ${task.weight}`}
+                    {`${index + 1}° Tarefa: Início - ${formatTime(task.start)} | Fim - ${formatTime(task.end)} | Peso - ${task.weight}`}
                   </TimelineContent>
                 </TimelineItem>
               ))}
@@ -66,6 +63,28 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, result, totalWeight, onReset
             <Button variant="outlined" onClick={onReset} sx={{ mt: 2 }}>
               Resetar Tarefas
             </Button>
+          </Box>
+        </>
+      )}
+
+      {/* Display discarded tasks */}
+      {discardedTasks.length > 0 && (
+        <>
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h6" color="error">Tarefas Descartadas</Typography>
+            <Timeline>
+              {discardedTasks.map((task, index) => (
+                <TimelineItem key={index}>
+                  <TimelineSeparator>
+                    <TimelineDot color="error" />
+                    {index < discardedTasks.length - 1 && <TimelineConnector />}
+                  </TimelineSeparator>
+                  <TimelineContent>
+                    {`${index + 1}° Tarefa: Início - ${formatTime(task.start)} | Fim - ${formatTime(task.end)} | Peso - ${task.weight}`}
+                  </TimelineContent>
+                </TimelineItem>
+              ))}
+            </Timeline>
           </Box>
         </>
       )}

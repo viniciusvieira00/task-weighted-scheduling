@@ -73,9 +73,12 @@ const Home = () => {
     setIsEditing(index); 
   };
 
+  const [discardedTasks, setDiscardedTasks] = useState<Task[]>([]);
   const handleSchedule = () => {
     const scheduledTasks = weightedIntervalScheduling(tasks);
+    const discarded = tasks.filter(task => !scheduledTasks.includes(task));
     setResult(scheduledTasks);
+    setDiscardedTasks(discarded);
     const total = scheduledTasks.reduce((sum, task) => sum + task.weight, 0);
     setTotalWeight(total);
     setSnackbarMessage("Agendamento concluído com sucesso!");
@@ -168,6 +171,7 @@ const Home = () => {
         <TaskList
           tasks={tasks}
           result={result}
+          discardedTasks={discardedTasks}
           totalWeight={totalWeight}
           onReset={handleResetTasks}
           onDelete={handleDeleteTask}
