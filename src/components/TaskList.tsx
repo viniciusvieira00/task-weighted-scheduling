@@ -29,7 +29,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, result, totalWeight, onReset
           <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
             <Typography>
               
-              {`Tarefa ${index + 1}: Início - ${formatTime(task.start)} | Fim - ${formatTime(task.end)} | Peso - ${task.weight}`}
+              {`${index + 1}° Tarefa: Início - ${formatTime(task.start)} | Fim - ${formatTime(task.end)} | Peso - ${task.weight}`}
             </Typography>
             <Box>
               <IconButton onClick={() => onEdit(index)} aria-label="edit">
