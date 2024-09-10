@@ -22,6 +22,8 @@ const Home = () => {
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
+  const [discardedTasks, setDiscardedTasks] = useState<Task[]>([]);
+
   const handleAddTask = () => {
     if (startTime && endTime) {
       if (endTime <= startTime) {
@@ -73,7 +75,6 @@ const Home = () => {
     setIsEditing(index); 
   };
 
-  const [discardedTasks, setDiscardedTasks] = useState<Task[]>([]);
   const handleSchedule = () => {
     const scheduledTasks = weightedIntervalScheduling(tasks);
     const discarded = tasks.filter(task => !scheduledTasks.includes(task));
@@ -86,9 +87,10 @@ const Home = () => {
   };
 
   const handleResetTasks = () => {
-    setTasks([]);
-    setResult([]);
-    setTotalWeight(0);
+    setTasks([]);            // Clear the tasks
+    setResult([]);           // Clear the scheduled tasks
+    setDiscardedTasks([]);   // Clear the discarded tasks
+    setTotalWeight(0);       // Reset the total weight
     setSnackbarMessage("Todas as tarefas foram resetadas.");
     setSnackbarOpen(true); 
   };
