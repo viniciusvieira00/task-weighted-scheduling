@@ -78,7 +78,7 @@ Você também pode acessar a aplicação diretamente no link de deploy:
 
 ## Vídeo
 
-<!-- - [Baixe o Vídeo](https://github.com/viniciusvieira00/hanoi-tower/tree/main/readme_data/bandicam-2024-08-19-23-31-34-104.mp4) -->
+- [Visualize o Vídeo de utilização e explicação do projeto](https://youtu.be/al28OrgUGmc)
 
 ## Contribuidores do Projeto
 
